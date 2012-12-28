@@ -16,7 +16,13 @@ sub all_ok {
 
     my $search_path = $param{search_path};
     my @checks;
-    push @checks, $param{check}, @{ $param{checks} || [] };
+    for my $check ( $param{check}, @{ $param{checks} || [] } ) {
+        my ($name) = keys %{$check || +{}};
+        my $test   = $name ? $check->{$name} : undef;
+        if (ref($test) eq 'CODE') {
+            push @checks, +{ test => $test, name => "$name: ", };
+        }
+    }
 
     unless ($search_path) {
         Test::More::plan skip_all => 'no search path';
@@ -27,22 +33,21 @@ sub all_ok {
     my @exceptions = @{ $param{except} || [] };
     my @lib        = @{ $param{lib} || ['lib'] };
 
-    for my $check (@checks) {
-        my ($name) = keys %{$check || +{}};
-        my $test   = $name ? $check->{$name} : undef;
-        next unless ref($test) eq 'CODE';
-
-        for my $class (
-            grep { !_is_excluded( $_, @exceptions ) }
-            sort do {
-                local @INC = @lib;
-                my $finder = Module::Pluggable::Object->new(
-                    search_path => $search_path );
-                ( $search_path, $finder->plugins );
-            }
-        )
-        {
-            Test::More::ok( $test->($class), "$name: $class" );
+    for my $class (
+        grep { !_is_excluded( $_, @exceptions ) }
+        sort do {
+            local @INC = @lib;
+            my $finder = Module::Pluggable::Object->new(
+                search_path => $search_path );
+            ( $search_path, $finder->plugins );
+        }
+    )
+    {
+        for my $check (@checks) {
+            Test::More::ok(
+                $check->{test}->($class),
+                "$check->{name}$class",
+            );
         }
     }
 }
