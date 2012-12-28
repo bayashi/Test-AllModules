@@ -1,4 +1,7 @@
 Revision history for Perl extension Test::AllModules
 
+0.02    Sat Dec 29 00:07:26 JST 2012
+        - changed the logic of loops for modules
+
 0.01    Fri Dec 28 23:27:04 JST 2012
         - original version
