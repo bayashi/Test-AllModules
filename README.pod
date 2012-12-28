@@ -48,4 +48,6 @@ modify it under the same terms as Perl itself. See L<perlartistic>.
 
 =head1 AUTHOR
 
+dann
+
 Dai Okabayashi E<lt>bayashi@cpan.orgE<gt>
