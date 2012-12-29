@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::LoadAllModules;
+use Test::AllModules;
 use File::Spec;
 use lib File::Spec->catfile('t','lib2');
 
