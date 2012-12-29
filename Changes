@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::AllModules
 
+0.04    Sat Dec 29 16:34:06 JST 2012
+    [NO CODE CHANGE]
+        - fixed wrong module in the test
+
 0.03    Sat Dec 29 12:12:15 JST 2012
         - implemented more simple test(added document for this)
 
