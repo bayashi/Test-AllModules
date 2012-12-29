@@ -16,11 +16,16 @@ sub all_ok {
 
     my $search_path = $param{search_path};
     my @checks;
-    for my $check ( $param{check}, @{ $param{checks} || [] } ) {
-        my ($name) = keys %{$check || +{}};
-        my $test   = $name ? $check->{$name} : undef;
-        if (ref($test) eq 'CODE') {
-            push @checks, +{ test => $test, name => "$name: ", };
+    if (ref($param{check}) eq 'CODE') {
+        push @checks, +{ test => $param{check}, name => '', };
+    }
+    else {
+        for my $check ( $param{check}, @{ $param{checks} || [] } ) {
+            my ($name) = keys %{$check || +{}};
+            my $test   = $name ? $check->{$name} : undef;
+            if (ref($test) eq 'CODE') {
+                push @checks, +{ test => $test, name => "$name: ", };
+            }
         }
     }
 
