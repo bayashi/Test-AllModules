@@ -5,7 +5,7 @@ use Module::Pluggable::Object;
 use List::MoreUtils qw(any);
 use Test::More ();
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Exporter;
 our @ISA    = qw/Exporter/;
