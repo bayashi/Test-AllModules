@@ -5,7 +5,7 @@ use Module::Pluggable::Object;
 use List::MoreUtils qw(any);
 use Test::More ();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Exporter;
 our @ISA    = qw/Exporter/;
@@ -79,6 +79,19 @@ Test::AllModules - do some tests for modules in search path
     BEGIN {
         all_ok(
             search_path => 'MyApp',
+            check => sub {
+                my $class = shift;
+                eval "use $class;1;";
+            },
+        );
+    }
+
+    # if you need the name of test
+    use Test::AllModules;
+
+    BEGIN {
+        all_ok(
+            search_path => 'MyApp',
             check => +{
                 'use_ok' => sub {
                     my $class = shift;
@@ -88,7 +101,7 @@ Test::AllModules - do some tests for modules in search path
         );
     }
 
-    # more options
+    # more tests, all options
     use Test::AllModules;
 
     BEGIN {
