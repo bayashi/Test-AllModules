@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::LoadAllModules;
+use Test::AllModules;
 use File::Spec;
 use lib File::Spec->catfile('t','lib2');
 
@@ -14,8 +14,9 @@ BEGIN {
         },
     ];
 
-    all_uses_ok(
+    all_ok(
         search_path => 'MyApp2',
+        checks => $checks,
         lib => [ File::Spec->catfile('t','lib2') ]
     );
 }
