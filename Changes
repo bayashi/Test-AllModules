@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::AllModules
 
+0.05    Wed Jan  2 00:32:47 JST 2013
+    [NO CODE CHANGE]
+        - require Win32.pm for windows OS
+
 0.04    Sat Dec 29 16:34:06 JST 2012
     [NO CODE CHANGE]
         - fixed wrong module in the test
