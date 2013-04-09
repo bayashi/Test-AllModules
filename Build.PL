@@ -7,6 +7,10 @@ my $builder = Module::Build->new(
     license             => 'perl',
     dist_author         => 'Dai Okabayashi <bayashi@cpan.org>',
     dist_version_from   => 'lib/Test/AllModules.pm',
+    build_requires      => {
+        'FindBin' => 0,
+        'File::Spec' => 0,
+    },
     requires => {
         'perl' => '5.8.1',
         'List::MoreUtils' => 0,
