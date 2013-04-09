@@ -13,7 +13,6 @@ my $builder = Module::Build->new(
     },
     requires => {
         'perl' => '5.8.1',
-        'List::MoreUtils' => 0,
         'Module::Pluggable::Object' => 0,
         'Test::More' => 0.88,
         'Exporter' => 0,
