@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Module::Pluggable::Object;
 use List::MoreUtils qw(any);
+use List::Util qw(shuffle);
 use Test::More ();
 
 our $VERSION = '0.05';
@@ -36,30 +37,36 @@ sub all_ok {
 
     Test::More::plan('no_plan');
     my @exceptions = @{ $param{except} || [] };
-    my @lib        = @{ $param{lib} || ['lib'] };
 
     for my $class (
         grep { !_is_excluded( $_, @exceptions ) }
-        sort do {
-            local @INC = @lib;
-            my $finder = Module::Pluggable::Object->new(
-                search_path => $search_path );
-            ( $search_path, $finder->plugins );
-        }
-    )
-    {
+            _classes($search_path, \%param) ) {
+
         for my $check (@checks) {
             Test::More::ok(
                 $check->{test}->($class),
                 "$check->{name}$class",
             );
         }
+
     }
 }
 
 sub _is_excluded {
     my ( $module, @exceptions ) = @_;
     any { $module eq $_ || $module =~ /$_/ } @exceptions;
+}
+
+sub _classes {
+    my ($search_path, $param) = @_;
+
+    local @INC = @{ $param->{lib} || ['lib'] };
+    my $finder = Module::Pluggable::Object->new(
+        search_path => $search_path,
+    );
+    my @classes = ( $search_path, $finder->plugins );
+
+    return $param->{shuffle} ? shuffle(@classes) : sort(@classes);
 }
 
 1;
