@@ -146,7 +146,9 @@ Test::AllModules - do some tests for modules in search path
             lib => [
                 'lib',
                 't/lib',
-            ]
+            ],
+
+            shuffle => 1, # shuffle a use list
         );
     }
 
