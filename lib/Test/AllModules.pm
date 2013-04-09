@@ -69,7 +69,7 @@ sub _shuffle {
 }
 
 # This '_any' method copied from List::MoreUtils.
-sub _any (&@) {
+sub _any (&@) { ## no critic
     my $f = shift;
 
     foreach ( @_ ) {
