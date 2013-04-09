@@ -2,8 +2,6 @@ package Test::AllModules;
 use strict;
 use warnings;
 use Module::Pluggable::Object;
-use List::MoreUtils qw(any);
-use List::Util qw(shuffle);
 use Test::More ();
 
 our $VERSION = '0.05';
@@ -52,11 +50,6 @@ sub all_ok {
     }
 }
 
-sub _is_excluded {
-    my ( $module, @exceptions ) = @_;
-    any { $module eq $_ || $module =~ /$_/ } @exceptions;
-}
-
 sub _classes {
     my ($search_path, $param) = @_;
 
@@ -66,7 +59,28 @@ sub _classes {
     );
     my @classes = ( $search_path, $finder->plugins );
 
-    return $param->{shuffle} ? shuffle(@classes) : sort(@classes);
+    return $param->{shuffle} ? _shuffle(@classes) : sort(@classes);
+}
+
+# This '_shuffle' method copied
+# from http://blog.nomadscafe.jp/archives/000246.html
+sub _shuffle {
+    map { $_[$_->[0]] } sort { $a->[1] <=> $b->[1] } map { [$_ , rand(1)] } 0..$#_;
+}
+
+# This '_any' method copied from List::MoreUtils.
+sub _any (&@) {
+    my $f = shift;
+
+    foreach ( @_ ) {
+        return 1 if $f->();
+    }
+    return;
+}
+
+sub _is_excluded {
+    my ( $module, @exceptions ) = @_;
+    _any { $module eq $_ || $module =~ /$_/ } @exceptions;
 }
 
 1;
