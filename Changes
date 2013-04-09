@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::AllModules
 
+0.061   Wed Apr 10 00:19:46 JST 2013
+        - added POD: shuffle option
+
 0.06    Tue Apr  9 23:26:24 JST 2013
     [NEW FEATURE]
         - added new option: 'shuffle' is for sorting random modules
