@@ -36,18 +36,49 @@ sub all_ok {
     Test::More::plan('no_plan');
     my @exceptions = @{ $param{except} || [] };
 
+    if ($param{fork}) {
+        require Test::SharedFork;
+        Test::More::note("Tests run under forking. Parent PID=$$");
+    }
+
     for my $class (
         grep { !_is_excluded( $_, @exceptions ) }
             _classes($search_path, \%param) ) {
 
         for my $check (@checks) {
-            Test::More::ok(
-                $check->{test}->($class),
-                "$check->{name}$class",
-            );
+            _exec_test($check, $class, $param{fork});
         }
 
     }
+}
+
+sub _exec_test {
+    my ($check, $class, $fork) = @_;
+
+    unless ($fork) {
+        _ok($check, $class);
+        return;
+    }
+
+    my $pid = fork();
+    die 'could not fork' unless defined $pid;
+
+    if ($pid) {
+        waitpid($pid, 0);
+    }
+    else {
+        _ok($check, $class, $fork);
+        exit;
+    }
+}
+
+sub _ok {
+    my ($check, $class, $fork) = @_;
+
+    Test::More::ok(
+        $check->{test}->($class),
+        "$check->{name}$class". ( $fork && $fork == 2 ? "(PID=$$)" : '' )
+    );
 }
 
 sub _classes {
@@ -149,6 +180,8 @@ Test::AllModules - do some tests for modules in search path
             ],
 
             shuffle => 1, # shuffle a use list
+
+            fork => 1,    # use each module after forking
         );
     }
 
