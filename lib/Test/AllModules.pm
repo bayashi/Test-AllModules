@@ -163,6 +163,19 @@ Test::AllModules - do some tests for modules in search path
         );
     }
 
+    # actually the count is also passed
+    use Test::AllModules;
+
+    BEGIN {
+        all_ok(
+            search_path => 'MyApp',
+            check => sub {
+                my ($class, $count) = @_;
+                eval "use $class;1;";
+            },
+        );
+    }
+
     # more tests, all options
     use Test::AllModules;
 
