@@ -220,10 +220,27 @@ Test::AllModules is do some tests for modules in search path.
 
 =head1 EXPORTED FUNCTIONS
 
-=head2 all_ok
+=head2 all_ok(%args)
 
 do C<check(s)> code as C<Test::More::ok()> for every module in search path.
 
+=over 4
+
+=item search_path
+
+=item check
+
+=item checks
+
+=item except
+
+=item lib
+
+=item shuffle
+
+=item fork
+
+=back
 
 =head1 REPOSITORY
 
