@@ -135,7 +135,8 @@ Test::AllModules - do some tests for modules in search path
 
 =head1 SYNOPSIS
 
-    # simplest
+simplest
+
     use Test::AllModules;
 
     BEGIN {
@@ -148,7 +149,8 @@ Test::AllModules - do some tests for modules in search path
         );
     }
 
-    # if you need the name of test
+if you need the name of test
+
     use Test::AllModules;
 
     BEGIN {
@@ -163,7 +165,8 @@ Test::AllModules - do some tests for modules in search path
         );
     }
 
-    # actually the count is also passed
+actually the count is also passed
+
     use Test::AllModules;
 
     BEGIN {
@@ -176,7 +179,8 @@ Test::AllModules - do some tests for modules in search path
         );
     }
 
-    # more tests, all options
+more tests, all options
+
     use Test::AllModules;
 
     BEGIN {
