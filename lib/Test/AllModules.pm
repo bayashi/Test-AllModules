@@ -4,7 +4,7 @@ use warnings;
 use Module::Pluggable::Object;
 use Test::More ();
 
-our $VERSION = '0.061';
+our $VERSION = '0.07';
 
 use Exporter;
 our @ISA    = qw/Exporter/;

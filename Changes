@@ -1,5 +1,11 @@
 Revision history for Perl extension Test::AllModules
 
+0.07    Thu Apr 11 09:09:37 JST 2013
+    [NEW FEATURE]
+        - new option: 'fork'
+            1: use each module after forking.
+            2: use each module after forking and also show PID
+
 0.061   Wed Apr 10 00:19:46 JST 2013
         - added POD: shuffle option
 
