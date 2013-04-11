@@ -48,22 +48,25 @@ sub all_ok {
         Test::More::note("Tests run under forking. Parent PID=$$");
     }
 
+    my $count = 0;
     for my $class (
         grep { !_is_excluded( $_, @exceptions ) }
             _classes($search_path, \%param) ) {
-
+        $count++;
         for my $check (@checks) {
-            _exec_test($check, $class, $param{fork});
+            _exec_test($check, $class, $count, $param{fork});
         }
 
     }
+
+    Test::More::note( "total: $count module". ($count > 1 ? 's' : '') );
 }
 
 sub _exec_test {
-    my ($check, $class, $fork) = @_;
+    my ($check, $class, $count, $fork) = @_;
 
     unless ($fork) {
-        _ok($check, $class);
+        _ok($check, $class, $count);
         return;
     }
 
@@ -74,16 +77,16 @@ sub _exec_test {
         waitpid($pid, 0);
     }
     else {
-        _ok($check, $class, $fork);
+        _ok($check, $class, $count, $fork);
         exit;
     }
 }
 
 sub _ok {
-    my ($check, $class, $fork) = @_;
+    my ($check, $class, $count, $fork) = @_;
 
     Test::More::ok(
-        $check->{test}->($class),
+        $check->{test}->($class, $count),
         "$check->{name}$class". ( $fork && $fork == 2 ? "(PID=$$)" : '' )
     );
 }
