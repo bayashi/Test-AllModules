@@ -222,7 +222,7 @@ Test::AllModules is do some tests for modules in search path.
 
 =head2 all_ok
 
-do C<check(s)> code as ok() for every modules in search path.
+do C<check(s)> code as C<Test::More::ok()> for every module in search path.
 
 
 =head1 REPOSITORY
