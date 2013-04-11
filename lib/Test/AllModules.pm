@@ -179,9 +179,9 @@ Test::AllModules - do some tests for modules in search path
                 't/lib',
             ],
 
-            shuffle => 1, # shuffle a use list
+            shuffle => 1, # shuffle a use list: optional
 
-            fork => 1,    # use each module after forking
+            fork => 1,    # use each module after forking: optional
         );
     }
 
