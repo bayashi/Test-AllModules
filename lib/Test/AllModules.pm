@@ -6,9 +6,16 @@ use Test::More ();
 
 our $VERSION = '0.07';
 
-use Exporter;
-our @ISA    = qw/Exporter/;
-our @EXPORT = qw/all_ok/;
+sub import {
+    my $class = shift;
+
+    my $caller = caller;
+
+    no strict 'refs'; ## no critic
+    for my $func (qw/ all_ok /) {
+        *{"${caller}::$func"} = \&{"Test::AllModules::$func"};
+    }
+}
 
 sub all_ok {
     my %param = @_;

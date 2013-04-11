@@ -16,7 +16,6 @@ my $builder = Module::Build->new(
         'Module::Pluggable::Object' => 0,
         'Test::More' => 0.88,
         'Test::SharedFork' => 0,
-        'Exporter' => 0,
     },
     add_to_cleanup      => [ 'Test-AllModules-*' ],
     meta_merge     => {
