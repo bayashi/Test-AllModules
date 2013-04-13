@@ -226,19 +226,36 @@ do C<check(s)> code as C<Test::More::ok()> for every module in search path.
 
 =over 4
 
-=item search_path
+=item * B<search_path> => 'Class'
 
-=item check
+A namespace to look in. see: L<Module::Pluggable::Object>
 
-=item checks
+=item * B<check> => \&test_code_ref or hash( TEST_NAME => \&test_code_ref )
+=item * B<checks> => \@array: include hash( TEST_NAME => \&test_code_ref )
 
-=item except
+The code to execute each module. The code receives C<$class> and C<$count>. The result from the code is passed to C<Test::More::ok()>.
 
-=item lib
+=item * B<except> => \@array: include scalar or qr//
 
-=item shuffle
+This parameter is optional.
 
-=item fork
+=item * B<lib> => \@array
+
+Additional library paths.
+
+This parameter is optional.
+
+=item * B<fork> => 1:fork, 2:fork and show PID
+
+If this option was set a value(1 or 2) then each check-code executes after forking.
+
+This parameter is optional.
+
+=item * B<shuffle> => boolean
+
+If this option was set the true value then modules will be sorted in random order.
+
+This parameter is optional.
 
 =back
 
