@@ -135,8 +135,6 @@ Test::AllModules - do some tests for modules in search path
 
 =head1 SYNOPSIS
 
-simplest
-
     use Test::AllModules;
 
     BEGIN {
@@ -146,69 +144,6 @@ simplest
                 my $class = shift;
                 eval "use $class;1;";
             },
-        );
-    }
-
-if you need the name of test
-
-    use Test::AllModules;
-
-    BEGIN {
-        all_ok(
-            search_path => 'MyApp',
-            check => +{
-                'use_ok' => sub {
-                    my $class = shift;
-                    eval "use $class;1;";
-                },
-            },
-        );
-    }
-
-actually the count is also passed
-
-    use Test::AllModules;
-
-    BEGIN {
-        all_ok(
-            search_path => 'MyApp',
-            check => sub {
-                my ($class, $count) = @_;
-                eval "use $class;1;";
-            },
-        );
-    }
-
-more tests, all options
-
-    use Test::AllModules;
-
-    BEGIN {
-        all_ok(
-            search_path => 'MyApp',
-            checks => [
-                +{
-                    'use_ok' => sub {
-                        my $class = shift;
-                        eval "use $class;1;";
-                    },
-                },
-            ],
-
-            # `except` and `lib` are optional.
-            except => [
-                'MyApp::Role',
-                qr/MyApp::Exclude::.*/,
-            ],
-
-            lib => [
-                'lib',
-                't/lib',
-            ],
-
-            shuffle => 1, # shuffle a use list: optional
-
-            fork => 1,    # use each module after forking: optional
         );
     }
 
@@ -258,6 +193,74 @@ If this option was set the true value then modules will be sorted in random orde
 This parameter is optional.
 
 =back
+
+
+=head1 EXAMPLES
+
+if you need the name of test
+
+    use Test::AllModules;
+
+    BEGIN {
+        all_ok(
+            search_path => 'MyApp',
+            check => +{
+                'use_ok' => sub {
+                    my $class = shift;
+                    eval "use $class;1;";
+                },
+            },
+        );
+    }
+
+actually the count is also passed
+
+    use Test::AllModules;
+
+    BEGIN {
+        all_ok(
+            search_path => 'MyApp',
+            check => sub {
+                my ($class, $count) = @_;
+                eval "use $class;1;";
+            },
+        );
+    }
+
+more tests, all options
+
+    use Test::AllModules;
+
+    BEGIN {
+        all_ok(
+
+            search_path => 'MyApp',
+
+            checks => [
+                +{
+                    'use_ok' => sub {
+                        my $class = shift;
+                        eval "use $class;1;";
+                    },
+                },
+            ],
+
+            except => [
+                'MyApp::Role',
+                qr/MyApp::Exclude::.*/,
+            ],
+
+            lib => [
+                'lib',
+                't/lib',
+            ],
+
+            shuffle => 1,
+
+            fork => 1,
+        );
+    }
+
 
 =head1 REPOSITORY
 
