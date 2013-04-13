@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::AllModules
 
+0.09    Sat Apr 13 16:35:18 JST 2013
+    [NEW FEATURE]
+        - new options for all_ok method: 'use' and 'require'.
+
 0.08    Sat Apr 13 15:06:56 JST 2013
     [NEW FEATURE]
         - module $count(number of order) is passed to check(s) code
