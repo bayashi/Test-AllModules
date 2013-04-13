@@ -6,6 +6,13 @@ use Test::More ();
 
 our $VERSION = '0.08';
 
+my $USE_OK = sub {
+    eval "use $_[0];1;"; ## no critic
+};
+my $REQUIRE_OK = sub {
+    eval "require $_[0];1;"; ## no critic
+};
+
 sub import {
     my $class = shift;
 
@@ -21,6 +28,8 @@ sub all_ok {
     my %param = @_;
 
     my $search_path = delete $param{search_path};
+    my $use_ok      = delete $param{use}     || $param{use_ok};
+    my $require_ok  = delete $param{require} || $param{require_ok};
     my $check       = delete $param{check};
     my $checks      = delete $param{checks};
     my $except      = delete $param{except};
@@ -29,6 +38,9 @@ sub all_ok {
     my $shuffle     = delete $param{shuffle};
 
     my @checks;
+    push @checks, +{ test => $USE_OK,     name => 'use: '     } if $use_ok;
+    push @checks, +{ test => $REQUIRE_OK, name => 'require: ' } if $require_ok;
+
     if (ref($check) eq 'CODE') {
         push @checks, +{ test => $check, name => '', };
     }
@@ -154,6 +166,18 @@ Test::AllModules - do some tests for modules in search path
         );
     }
 
+Here is also same as above: simplest one.
+
+    use Test::AllModules;
+
+    BEGIN {
+        all_ok(
+            search_path => 'MyApp',
+            use => 1,
+        );
+    }
+
+
 
 =head1 DESCRIPTION
 
@@ -171,6 +195,18 @@ do C<check(s)> code as C<Test::More::ok()> for every module in search path.
 =item * B<search_path> => 'Class'
 
 A namespace to look in. see: L<Module::Pluggable::Object>
+
+=item * B<use> => boolean
+
+If this option sets true value then do a load module(C<use>) test.
+
+This parameter is optional.
+
+=item * B<require> => boolean
+
+If this option sets true value then do a load module(C<require>) test.
+
+This parameter is optional.
 
 =item * B<check> => \&test_code_ref or hash( TEST_NAME => \&test_code_ref )
 =item * B<checks> => \@array: include hash( TEST_NAME => \&test_code_ref )
@@ -242,6 +278,10 @@ more tests, all options
         all_ok(
 
             search_path => 'MyApp',
+
+            use => 1,
+
+            require => 1,
 
             checks => [
                 +{
