@@ -20,15 +20,22 @@ sub import {
 sub all_ok {
     my %param = @_;
 
-    my $search_path = $param{search_path};
+    my $search_path = delete $param{search_path};
+    my $check       = delete $param{check};
+    my $checks      = delete $param{checks};
+    my $except      = delete $param{except};
+    my $lib         = delete $param{lib};
+    my $fork        = delete $param{fork};
+    my $shuffle     = delete $param{shuffle};
+
     my @checks;
-    if (ref($param{check}) eq 'CODE') {
-        push @checks, +{ test => $param{check}, name => '', };
+    if (ref($check) eq 'CODE') {
+        push @checks, +{ test => $check, name => '', };
     }
     else {
-        for my $check ( $param{check}, @{ $param{checks} || [] } ) {
-            my ($name) = keys %{$check || +{}};
-            my $test   = $name ? $check->{$name} : undef;
+        for my $code ( $check, @{ $checks || [] } ) {
+            my ($name) = keys %{$code || +{}};
+            my $test   = $name ? $code->{$name} : undef;
             if (ref($test) eq 'CODE') {
                 push @checks, +{ test => $test, name => "$name: ", };
             }
@@ -41,9 +48,9 @@ sub all_ok {
     }
 
     Test::More::plan('no_plan');
-    my @exceptions = @{ $param{except} || [] };
+    my @exceptions = @{ $except || [] };
 
-    if ($param{fork}) {
+    if ($fork) {
         require Test::SharedFork;
         Test::More::note("Tests run under forking. Parent PID=$$");
     }
@@ -51,10 +58,10 @@ sub all_ok {
     my $count = 0;
     for my $class (
         grep { !_is_excluded( $_, @exceptions ) }
-            _classes($search_path, \%param) ) {
+            _classes($search_path, $lib, $shuffle) ) {
         $count++;
-        for my $check (@checks) {
-            _exec_test($check, $class, $count, $param{fork});
+        for my $code (@checks) {
+            _exec_test($code, $class, $count, $fork);
         }
 
     }
@@ -63,10 +70,10 @@ sub all_ok {
 }
 
 sub _exec_test {
-    my ($check, $class, $count, $fork) = @_;
+    my ($code, $class, $count, $fork) = @_;
 
     unless ($fork) {
-        _ok($check, $class, $count);
+        _ok($code, $class, $count);
         return;
     }
 
@@ -77,30 +84,30 @@ sub _exec_test {
         waitpid($pid, 0);
     }
     else {
-        _ok($check, $class, $count, $fork);
+        _ok($code, $class, $count, $fork);
         exit;
     }
 }
 
 sub _ok {
-    my ($check, $class, $count, $fork) = @_;
+    my ($code, $class, $count, $fork) = @_;
 
     Test::More::ok(
-        $check->{test}->($class, $count),
-        "$check->{name}$class". ( $fork && $fork == 2 ? "(PID=$$)" : '' )
+        $code->{test}->($class, $count),
+        "$code->{name}$class". ( $fork && $fork == 2 ? "(PID=$$)" : '' )
     );
 }
 
 sub _classes {
-    my ($search_path, $param) = @_;
+    my ($search_path, $lib, $shuffle) = @_;
 
-    local @INC = @{ $param->{lib} || ['lib'] };
+    local @INC = @{ $lib || ['lib'] };
     my $finder = Module::Pluggable::Object->new(
         search_path => $search_path,
     );
     my @classes = ( $search_path, $finder->plugins );
 
-    return $param->{shuffle} ? _shuffle(@classes) : sort(@classes);
+    return $shuffle ? _shuffle(@classes) : sort(@classes);
 }
 
 # This '_shuffle' method copied

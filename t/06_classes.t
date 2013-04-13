@@ -11,10 +11,8 @@ my $fail = 1;
 for (1..9) {
     my @classes = Test::AllModules::_classes(
         'MyApp',
-        +{
-            lib     => [ File::Spec->catfile('t','lib') ],
-            shuffle => 1,
-        },
+        [ File::Spec->catfile('t','lib') ], # lib
+        1, # shuffle
     );
     my $got = join ' ', @classes;
     if ($got ne $SORTED_LIST) {
