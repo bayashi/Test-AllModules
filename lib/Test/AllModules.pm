@@ -4,7 +4,7 @@ use warnings;
 use Module::Pluggable::Object;
 use Test::More ();
 
-our $VERSION = '0.091';
+our $VERSION = '0.10';
 
 my $USE_OK = sub {
     eval "use $_[0];1;"; ## no critic

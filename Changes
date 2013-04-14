@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::AllModules
 
+0.10    Sun Apr 14 20:51:12 JST 2013
+    [BUG FIX]
+        - 'fork' option in 'all_ok' method is NOT SUPPORTED for Windows
+
 0.091   Sun Apr 14 18:42:01 JST 2013
     [IMPROVEMENT]
         - fixed broken POD
