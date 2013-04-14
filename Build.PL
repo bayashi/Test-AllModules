@@ -2,6 +2,13 @@ use strict;
 use warnings;
 use Module::Build;
 
+my %win_build_requires = ();
+if ($^O eq 'MSWin32') {
+    %win_build_requires = (
+        'Win32' => 0
+    );
+}
+
 my $builder = Module::Build->new(
     module_name         => 'Test::AllModules',
     license             => 'perl',
@@ -10,6 +17,7 @@ my $builder = Module::Build->new(
     build_requires      => {
         'FindBin' => 0,
         'File::Spec' => 0,
+        %win_build_requires,
     },
     requires => {
         'perl' => '5.8.1',
