@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::AllModules
 
+0.091   Sun Apr 14 18:42:01 JST 2013
+    [IMPROVEMENT]
+        - fixed broken POD
+
 0.09    Sat Apr 13 16:35:18 JST 2013
     [NEW FEATURE]
         - new options for all_ok method: 'use' and 'require'.
