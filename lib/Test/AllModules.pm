@@ -209,6 +209,7 @@ If this option sets true value then do a load module(C<require>) test.
 This parameter is optional.
 
 =item * B<check> => \&test_code_ref or hash( TEST_NAME => \&test_code_ref )
+
 =item * B<checks> => \@array: include hash( TEST_NAME => \&test_code_ref )
 
 The code to execute each module. The code receives C<$class> and C<$count>. The result from the code is passed to C<Test::More::ok()>.
