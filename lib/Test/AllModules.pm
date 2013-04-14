@@ -37,6 +37,11 @@ sub all_ok {
     my $fork        = delete $param{fork};
     my $shuffle     = delete $param{shuffle};
 
+    if ( _is_win() && $fork ) {
+        Test::More::plan skip_all => 'The "fork" option is not supported in Windows';
+        exit;
+    }
+
     my @checks;
     push @checks, +{ test => $USE_OK,     name => 'use: '     } if $use_ok;
     push @checks, +{ test => $REQUIRE_OK, name => 'require: ' } if $require_ok;
@@ -143,6 +148,10 @@ sub _is_excluded {
     _any { $module eq $_ || $module =~ /$_/ } @exceptions;
 }
 
+sub _is_win {
+    return ($^O && $^O eq 'MSWin32') ? 1 : 0;
+}
+
 1;
 
 __END__
@@ -229,6 +238,8 @@ This parameter is optional.
 If this option was set a value(1 or 2) then each check-code executes after forking.
 
 This parameter is optional.
+
+NOTE that this option is not supported in Windows system.
 
 =item * B<shuffle> => boolean
 
