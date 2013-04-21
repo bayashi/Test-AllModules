@@ -4,6 +4,12 @@ perl:
   - "5.14"
   - "5.12"
   - "5.10"
+before_install:
+  - cpanm -nq Devel::Cover::Report::Coveralls
+script:
+  perl Build.PL && ./Build build && cover -test
+after_success:
+  - cover -report coveralls
 notifications:
   irc:
     channels:
