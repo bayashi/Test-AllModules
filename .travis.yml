@@ -10,6 +10,8 @@ script:
   perl Build.PL && ./Build build && cover -test
 after_success:
   - cover -report coveralls
+after_script:
+  - echo ${TRAVIS_TEST_RESULT} | grep -F -q '/.cpanm/build.log' && tail -n50 /home/travis/.cpanm/build.log
 notifications:
   irc:
     channels:
