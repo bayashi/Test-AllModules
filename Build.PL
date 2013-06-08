@@ -25,6 +25,9 @@ my $builder = Module::Build->new(
     license             => 'perl',
     dist_author         => 'Dai Okabayashi <bayashi@cpan.org>',
     dist_version_from   => 'lib/Test/AllModules.pm',
+    configure_requires  => {
+        'Module::Build' => 0.38,
+    },
     build_requires      => {
         'FindBin' => 0,
         'File::Spec' => 0,

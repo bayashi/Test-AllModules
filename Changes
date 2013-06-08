@@ -1,5 +1,11 @@
 Revision history for Perl extension Test::AllModules
 
+0.12    Sat Jun  8 15:28:35 JST 2013
+    [NEW FEATURE]
+        - added 'show_version' option. show the version of module.
+    [IMPROVEMENT]
+        - you can know the reason why tests failed.
+
 0.11    Tue Apr 16 00:14:58 JST 2013
     [TEST FIXES]
         - added lacking lib
