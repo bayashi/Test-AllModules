@@ -247,7 +247,7 @@ If this option was set a value(1 or 2) then each check-code executes after forki
 
 This parameter is optional.
 
-NOTE that this option is not supported in Windows system.
+NOTE that this option is NOT supported in Windows system.
 
 =item * B<shuffle> => boolean
 
