@@ -255,6 +255,12 @@ If this option was set the true value then modules will be sorted in random orde
 
 This parameter is optional.
 
+=item * B<show_version> => boolean
+
+If this option was set the true value then the version of module will be shown.
+
+This parameter is optional.
+
 =back
 
 
