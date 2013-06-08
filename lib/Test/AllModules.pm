@@ -7,10 +7,14 @@ use Test::More ();
 our $VERSION = '0.11';
 
 my $USE_OK = sub {
-    eval "use $_[0];1;"; ## no critic
+    eval "use $_[0];"; ## no critic
+    Test::More::note($@) if $@;
+    return 1;
 };
 my $REQUIRE_OK = sub {
-    eval "require $_[0];1;"; ## no critic
+    eval "require $_[0];"; ## no critic
+    Test::More::note($@) if $@;
+    return 1;
 };
 
 sub import {
@@ -110,17 +114,31 @@ sub _exec_test {
 sub _ok {
     my ($code, $class, $count, $fork, $show_version) = @_;
 
-    Test::More::ok(
-        $code->{test}->($class, $count),
-        "$code->{name}$class". ( $fork && $fork == 2 ? "(PID=$$)" : '' )
-    ) and do {
+    my $test_name = "$code->{name}$class". ($fork && $fork == 2 ? "(PID=$$)" : '');
+
+    my $ret;
+    eval {
+        $ret = $code->{test}->($class, $count);
+    };
+
+    if (my $e = $@) {
+        Test::More::fail($test_name);
+        Test::More::note("The Test failed: $e");
+        return;
+    }
+
+    if ( Test::More::ok($ret, $test_name) ) {
         if ($show_version) {
-            no strict 'refs';
+            no strict 'refs'; ## no critic
             if ( my $version = ${"$class\::VERSION"} ) {
                 Test::More::note("$class $version");
             }
         }
-    };
+    }
+    else {
+        my $got = defined $ret ? $ret : '';
+        Test::More::note("The Test did NOT return true value. got: $got");
+    }
 }
 
 sub _classes {
