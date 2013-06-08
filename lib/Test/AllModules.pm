@@ -36,6 +36,7 @@ sub all_ok {
     my $lib         = delete $param{lib};
     my $fork        = delete $param{fork};
     my $shuffle     = delete $param{shuffle};
+    my $show_version = delete $param{show_version};
 
     if ( _is_win() && $fork ) {
         Test::More::plan skip_all => 'The "fork" option is not supported in Windows';
@@ -78,7 +79,7 @@ sub all_ok {
             _classes($search_path, $lib, $shuffle) ) {
         $count++;
         for my $code (@checks) {
-            _exec_test($code, $class, $count, $fork);
+            _exec_test($code, $class, $count, $fork, $show_version);
         }
 
     }
@@ -87,10 +88,10 @@ sub all_ok {
 }
 
 sub _exec_test {
-    my ($code, $class, $count, $fork) = @_;
+    my ($code, $class, $count, $fork, $show_version) = @_;
 
     unless ($fork) {
-        _ok($code, $class, $count);
+        _ok($code, $class, $count, undef, $show_version);
         return;
     }
 
@@ -101,18 +102,25 @@ sub _exec_test {
         waitpid($pid, 0);
     }
     else {
-        _ok($code, $class, $count, $fork);
+        _ok($code, $class, $count, $fork, $show_version);
         exit;
     }
 }
 
 sub _ok {
-    my ($code, $class, $count, $fork) = @_;
+    my ($code, $class, $count, $fork, $show_version) = @_;
 
     Test::More::ok(
         $code->{test}->($class, $count),
         "$code->{name}$class". ( $fork && $fork == 2 ? "(PID=$$)" : '' )
-    );
+    ) and do {
+        if ($show_version) {
+            no strict 'refs';
+            if ( my $version = ${"$class\::VERSION"} ) {
+                Test::More::note("$class $version");
+            }
+        }
+    };
 }
 
 sub _classes {
