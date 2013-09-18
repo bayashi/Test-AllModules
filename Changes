@@ -1,5 +1,10 @@
 Revision history for Perl extension Test::AllModules
 
+0.13    Wed Sep 18 23:37:14 JST 2013
+    [BUG FIX]
+        - fixed bug: when an error happens, then the test will be fail.
+            thanks to @Spring_MT
+
 0.12    Sat Jun  8 15:28:35 JST 2013
     [NEW FEATURE]
         - added 'show_version' option. show the version of module.
