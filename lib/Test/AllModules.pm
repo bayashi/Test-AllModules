@@ -14,6 +14,16 @@ my $USE_OK = sub {
     }
     return 1;
 };
+my $USE_NO_IMPORT_OK = sub {
+    eval "use $_[0] qw//;"; ## no critic
+    if (my $e = $@) {
+        Test::More::note($e);
+        return;
+    }
+    return 1;
+};
+
+
 my $REQUIRE_OK = sub {
     eval "require $_[0];"; ## no critic
     if (my $e = $@) {
@@ -47,6 +57,7 @@ sub all_ok {
     my $fork        = delete $param{fork};
     my $shuffle     = delete $param{shuffle};
     my $show_version = delete $param{show_version};
+    my $no_import   = delete $param{no_import};
 
     if ( _is_win() && $fork ) {
         Test::More::plan skip_all => 'The "fork" option is not supported in Windows';
@@ -54,7 +65,7 @@ sub all_ok {
     }
 
     my @checks;
-    push @checks, +{ test => $USE_OK,     name => 'use: '     } if $use_ok;
+    push @checks, +{ test => $no_import ? $USE_NO_IMPORT_OK : $USE_OK, name => 'use: ' } if $use_ok;
     push @checks, +{ test => $REQUIRE_OK, name => 'require: ' } if $require_ok;
 
     if (ref($check) eq 'CODE') {
@@ -249,6 +260,10 @@ If this option sets true value then do a load module(C<require>) test.
 
 This parameter is optional.
 
+=item * B<no_import> => boolean
+
+If this option sets true value then do not import any function when a test module is loaded.
+
 =item * B<check> => \&test_code_ref or hash( TEST_NAME => \&test_code_ref )
 
 =item * B<checks> => \@array: include hash( TEST_NAME => \&test_code_ref )
@@ -355,6 +370,8 @@ more tests, all options
             shuffle => 1,
 
             fork => 1,
+
+            no_import => 1,
         );
     }
 
