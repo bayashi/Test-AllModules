@@ -343,12 +343,9 @@ more tests, all options
         all_ok(
 
             search_path => 'MyApp',
-
-            use => 1,
-
+            use     => 1,
             require => 1,
-
-            checks => [
+            checks  => [
                 +{
                     'use_ok' => sub {
                         my $class = shift;
@@ -356,21 +353,16 @@ more tests, all options
                     },
                 },
             ],
-
             except => [
                 'MyApp::Role',
                 qr/MyApp::Exclude::.*/,
             ],
-
             lib => [
                 'lib',
                 't/lib',
             ],
-
-            shuffle => 1,
-
-            fork => 1,
-
+            shuffle   => 1,
+            fork      => 1,
             no_import => 1,
         );
     }
