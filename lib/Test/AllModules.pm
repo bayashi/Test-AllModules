@@ -208,32 +208,28 @@ Test::AllModules - do some tests for modules in search path
 
     use Test::AllModules;
 
-    BEGIN {
-        all_ok(
-            search_path => 'MyApp',
-            check => sub {
-                my $class = shift;
-                eval "use $class;1;";
-            },
-        );
-    }
+    all_ok(
+        search_path => 'MyApp',
+        use => 1,
+    );
 
-Here is also same as above: simplest one.
+
+Here is also same as above
 
     use Test::AllModules;
 
-    BEGIN {
-        all_ok(
-            search_path => 'MyApp',
-            use => 1,
-        );
-    }
-
+    all_ok(
+        search_path => 'MyApp',
+        check => sub {
+            my $class = shift;
+            eval "use $class;1;";
+        },
+    );
 
 
 =head1 DESCRIPTION
 
-Test::AllModules is do some tests for modules in search path.
+Test::AllModules is do some tests for all modules in search path.
 
 
 =head1 EXPORTED FUNCTIONS
@@ -264,13 +260,17 @@ This parameter is optional.
 
 If this option sets true value then do not import any function when a test module is loaded.
 
+This parameter is optional.
+
 =item * B<check> => \&test_code_ref or hash( TEST_NAME => \&test_code_ref )
 
 =item * B<checks> => \@array: include hash( TEST_NAME => \&test_code_ref )
 
-The code to execute each module. The code receives C<$class> and C<$count>. The result from the code is passed to C<Test::More::ok()>.
+The code to execute each module. The code receives C<$class> and C<$count>. The result from the code will be passed to C<Test::More::ok()>. So, test codes must return true value if test is OK.
 
 =item * B<except> => \@array: include scalar or qr//
+
+Ignore modules.
 
 This parameter is optional.
 
@@ -286,7 +286,7 @@ If this option was set a value(1 or 2) then each check-code executes after forki
 
 This parameter is optional.
 
-NOTE that this option is NOT supported in Windows system.
+NOTE that this C<fork> option is NOT supported in Windows system.
 
 =item * B<shuffle> => boolean
 
@@ -296,7 +296,7 @@ This parameter is optional.
 
 =item * B<show_version> => boolean
 
-If this option was set the true value then the version of module will be shown.
+If this option was set the true value then the version of module will be shown if it's possible.
 
 This parameter is optional.
 
@@ -305,67 +305,48 @@ This parameter is optional.
 
 =head1 EXAMPLES
 
-if you need the name of test
+If you need the name of test, then you can use B<check> parameter: C<check => { test_name => sub { 'test' } }>
 
     use Test::AllModules;
 
-    BEGIN {
-        all_ok(
-            search_path => 'MyApp',
-            check => +{
-                'use_ok' => sub {
-                    my $class = shift;
-                    eval "use $class;1;";
-                },
-            },
-        );
-    }
-
-actually the count is also passed
-
-    use Test::AllModules;
-
-    BEGIN {
-        all_ok(
-            search_path => 'MyApp',
-            check => sub {
-                my ($class, $count) = @_;
+    all_ok(
+        search_path => 'MyApp',
+        check => +{
+            'use_ok' => sub {
+                my ($class, $test_count) = @_;
                 eval "use $class;1;";
             },
-        );
-    }
+        },
+    );
 
 more tests, all options
 
     use Test::AllModules;
 
-    BEGIN {
-        all_ok(
-
-            search_path => 'MyApp',
-            use     => 1,
-            require => 1,
-            checks  => [
-                +{
-                    'use_ok' => sub {
-                        my $class = shift;
-                        eval "use $class;1;";
-                    },
+    all_ok(
+        search_path => 'MyApp',
+        use     => 1,
+        require => 1,
+        checks  => [
+            +{
+                'use_ok' => sub {
+                    my $class = shift;
+                    eval "use $class; 1;";
                 },
-            ],
-            except => [
-                'MyApp::Role',
-                qr/MyApp::Exclude::.*/,
-            ],
-            lib => [
-                'lib',
-                't/lib',
-            ],
-            shuffle   => 1,
-            fork      => 1,
-            no_import => 1,
-        );
-    }
+            },
+        ],
+        except => [
+            'MyApp::Role',
+            qr/MyApp::Exclude::.*/,
+        ],
+        lib => [
+            'lib',
+            't/lib',
+        ],
+        shuffle   => 1,
+        fork      => 1,
+        no_import => 1,
+    );
 
 
 =head1 REPOSITORY
