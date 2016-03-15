@@ -1,5 +1,11 @@
 Revision history for Perl extension Test::AllModules
 
+0.14    Tue Mar 15 09:27:34 JST 2016
+    [NEW FEATURE]
+        - added 'no_import' option for loading a test module.
+    [IMPROVEMENT]
+        - enhanced POD
+
 0.13    Wed Sep 18 23:37:14 JST 2013
     [BUG FIX]
         - fixed bug: when an error happens, then the test will be fail.
