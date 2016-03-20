@@ -58,6 +58,8 @@ sub all_ok {
     my $shuffle     = delete $param{shuffle};
     my $show_version = delete $param{show_version};
     my $no_import   = delete $param{no_import};
+    my $before_hook = delete $param{before_hook};
+    my $after_hook  = delete $param{after_hook};
 
     if ( _is_win() && $fork ) {
         Test::More::plan skip_all => 'The "fork" option is not supported in Windows';
@@ -100,7 +102,9 @@ sub all_ok {
             _classes($search_path, $lib, $shuffle) ) {
         $count++;
         for my $code (@checks) {
-            _exec_test($code, $class, $count, $fork, $show_version);
+            next if $before_hook && $before_hook->($code, $class, $count);
+            my $ret = _exec_test($code, $class, $count, $fork, $show_version);
+            $after_hook && $after_hook->($ret, $code, $class, $count);
         }
 
     }
@@ -111,9 +115,11 @@ sub all_ok {
 sub _exec_test {
     my ($code, $class, $count, $fork, $show_version) = @_;
 
+    my $ret;
+
     unless ($fork) {
-        _ok($code, $class, $count, undef, $show_version);
-        return;
+        $ret = _ok($code, $class, $count, undef, $show_version);
+        return $ret;
     }
 
     my $pid = fork();
@@ -123,9 +129,11 @@ sub _exec_test {
         waitpid($pid, 0);
     }
     else {
-        _ok($code, $class, $count, $fork, $show_version);
+        $ret = _ok($code, $class, $count, $fork, $show_version);
         exit;
     }
+
+    return $ret;
 }
 
 sub _ok {
@@ -151,11 +159,14 @@ sub _ok {
                 Test::More::note("$class $version");
             }
         }
+        return 1; # ok
     }
     else {
         my $got = defined $ret ? $ret : '';
         Test::More::note("The Test did NOT return true value. got: $got");
     }
+
+    return;
 }
 
 sub _classes {
@@ -297,6 +308,34 @@ This parameter is optional.
 =item * B<show_version> => boolean
 
 If this option was set the true value then the version of module will be shown if it's possible.
+
+This parameter is optional.
+
+=item * B<before_hook> => code ref
+
+This code ref executes before test.
+
+    before_hook => sub {
+        my ($test_code, $class, $count) = @_;
+
+        # ... do something ...
+
+        return;
+    },
+
+B<NOTE> that if you return true value from before_hook, then the test will skip.
+
+This parameter is optional.
+
+=item * B<after_hook> => code ref
+
+This code ref executes after test.
+
+    after_hook  => sub {
+        my ($ret, $test_code, $class, $count) = @_;
+
+        # ... do something ...
+    },
 
 This parameter is optional.
 
