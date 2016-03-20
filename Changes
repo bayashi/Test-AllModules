@@ -1,5 +1,12 @@
 Revision history for Perl extension Test::AllModules
 
+0.15    Sun Mar 20 21:49:24 JST 2016
+    [NEW FEATURE]
+        - add before/after hooks to the test
+    [IMPROVEMENT]
+        - tiny fix for tests
+        - sort .travis.yml
+
 0.14    Tue Mar 15 09:27:34 JST 2016
     [NEW FEATURE]
         - added 'no_import' option for loading a test module.
