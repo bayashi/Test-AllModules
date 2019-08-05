@@ -391,7 +391,7 @@ more tests, all options
 =head1 REPOSITORY
 
 Test::AllModules is hosted on github
-<http://github.com/bayashi/Test-AllModules>
+L<http://github.com/bayashi/Test-AllModules>
 
 
 =head1 AUTHOR
