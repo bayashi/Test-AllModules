@@ -28,3 +28,4 @@ jobs:
         run: |
           ls -la "C:\Strawberry\perl\lib\auto"
           echo $PATH
+          perldoc -l Win32
