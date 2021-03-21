@@ -24,9 +24,9 @@ jobs:
         run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure Win32
       - name: test
         run: |
-          ls -la "C:\Strawberry\perl\lib\auto"
-          echo $PATH
           perldoc -l Win32
+          dir "C:\Strawberry\perl\lib\auto"
+          echo %PATH
       - name: Perldoc
         run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure Pod::Perldoc
 
