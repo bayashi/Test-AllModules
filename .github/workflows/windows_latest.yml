@@ -24,7 +24,7 @@ jobs:
         run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure Win32
       - name: test
         run: |
-          perl -e 'print "$_\n" for @INC;'
+          perl -e 'print join(", ", @INC);'
           echo %PATH
       - name: Perldoc
         run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure Pod::Perldoc
