@@ -22,5 +22,7 @@ jobs:
         run: perl -V
       - name: Install dependencies
         run: curl -sL https://git.io/cpm | perl - install -g --with-recommends --with-test --with-configure --with-develop --show-build-log-on-failure
+      - name: Install Windows Specific Module
+        run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure Win32
       - name: Run test
         run: prove -l t
